@@ -1,13 +1,16 @@
 package bz.nimitz.ybr.demo.service;
 
+import bz.nimitz.ybr.demo.IStatusCount;
+import bz.nimitz.ybr.demo.model.EStatus;
 import bz.nimitz.ybr.demo.model.History;
+import bz.nimitz.ybr.demo.model.HistorySpecs;
 import bz.nimitz.ybr.demo.model.Serv;
 import bz.nimitz.ybr.demo.model.State;
+import bz.nimitz.ybr.demo.model.StateResponse;
 import bz.nimitz.ybr.demo.repository.HistoryRepository;
 import bz.nimitz.ybr.demo.repository.ServRepository;
 import bz.nimitz.ybr.demo.repository.StateRepository;
 import org.springframework.data.domain.Sort;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,11 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,22 +47,53 @@ public class ServService {
         return historyRepository.findAll(PageRequest.of(0, 8, Sort.by(Sort.Direction.ASC, "createdAt"))).toList();
     }
 
-    public List<State> getStatusCurrent() {
-        /*Iterable<State> findAllIterable = stateRepository.findAll();
+    public List<StateResponse> getStatusCurrent() {
+        List<StateResponse> result = new ArrayList<>();
+        Iterable<State> findAllIterable = stateRepository.findAll();
+        LocalDateTime lastUpdateDate = historyRepository.findFirstByOrderByCreatedAtDesc().getCreatedAt();
         for (State state : findAllIterable) {
-            state.setServices();
-        }*/
-        return stateRepository.findAll();
+            List<History> services = historyRepository.findByStateAndCreatedAt(state, lastUpdateDate);
+            result.add(new StateResponse(state.getName(), services));
+        }
+        return result;
     }
-    public List<Serv> getStatusCurrent(String stateName) {
-        return servRepository.findAll();
+
+    public StateResponse getStatusCurrent(String stateName) {
+        State state = stateRepository.findFirstByName(stateName);
+        LocalDateTime lastUpdateDate = historyRepository.findFirstByOrderByCreatedAtDesc().getCreatedAt();
+        List<History> services = historyRepository.findByStateAndCreatedAt(state, lastUpdateDate);
+        return new StateResponse(state.getName(), services);
+    }
+
+    public List<StateResponse> getStatusByDate(LocalDateTime dateTime) {
+        List<StateResponse> result = new ArrayList<>();
+        Iterable<State> findAllIterable = stateRepository.findAll();
+        LocalDateTime previousDate;
+        for (State state : findAllIterable) {
+            previousDate = state.previousUpdateDate(dateTime);
+            List<History> services = historyRepository
+                    .findAll(HistorySpecs.isEqualState(state).and(HistorySpecs.isEqualCreatedAtHistory(previousDate)));
+            result.add(new StateResponse(state.getName(), services));
+        }
+        return result;
+    }
+
+    public IStatusCount getStatusMoreDisabled() {
+        List<IStatusCount> result = servRepository.countTotalStatusInterface(EStatus.NULL.name()); 
+        if (!result.isEmpty()) {
+            return result.get(0);
+        } else {
+            throw new RuntimeException("No result data");
+        }
+
     }
 
     public void loadData() {
         Document doc;
         try {
             doc = Jsoup.connect(this.urldata).get();
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            //Timestamp currentTime = Timestamp.from(Instant.now());
+            LocalDateTime currentTime = LocalDateTime.now();
             List<Serv> listServ = new ArrayList<>();
             Serv servCurrent = null;
             State stateCurrent = null;
@@ -92,13 +126,15 @@ public class ServService {
                     } else if (i > 0 && j > 0) {
                         servCurrent = listServ.get(j - 1);
                         String src = td.select("img").attr("src");
-                        int availability = 0;
+                        EStatus availability = EStatus.NULL;
                         if (src.contains("verde")) {
-                            availability = 1;
+                            availability = EStatus.ACTIVE;
                         } else if (src.contains("amarillo")) {
-                            availability = 2;
+                            availability = EStatus.PENDING;
+                            ;
                         } else if (src.contains("rojo")) {
-                            availability = 3;
+                            availability = EStatus.INACTIVE;
+                            ;
                         }
                         History newStateSer = new History(servCurrent, stateCurrent, availability, currentTime);
                         historyRepository.save(newStateSer);

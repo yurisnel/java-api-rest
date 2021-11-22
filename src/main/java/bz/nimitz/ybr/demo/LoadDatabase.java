@@ -18,15 +18,7 @@ public class LoadDatabase implements CommandLineRunner {
   
  
   @Override
-  public void run(String... args) throws Exception {
-   
-    //repository.deleteAll();
-
-    /*repository.save(new Serv("A1"));
-    repository.save(new Serv("B1"));
-
-    repository.findAll().forEach((city) -> {
-        logger.info("{}", city);
-    });*/
+  public void run(String... args) throws Exception {   
+  
   }
 }

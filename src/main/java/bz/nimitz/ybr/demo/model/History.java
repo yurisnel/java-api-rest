@@ -1,7 +1,11 @@
 package bz.nimitz.ybr.demo.model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Table(name = "history")
@@ -18,20 +22,22 @@ public class History {
     @JoinColumn(name = "state_id", nullable=false)
     State state;
 
-    private Integer status;
+    //private Integer status;
 
-    /*@Enumerated(EnumType.ORDINAL)
-    private Availability available;*/
+    @Column(columnDefinition = "ENUM('PENDING', 'ACTIVE', 'INACTIVE', 'NULL')")
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
 
     @Column(name = "created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     /*@CreationTimestamp*/
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
    
     public History() {
     }
 
-    public History(Serv service, State state, Integer status, Timestamp createdAt) {
-       this.service =service;
+    public History(Serv service, State state, EStatus status, LocalDateTime createdAt) {
+       this.service = service;
        this.state = state;
        this.status = status;
        this.createdAt = createdAt;
@@ -42,16 +48,17 @@ public class History {
         return this.service.getName() + "-" + this.state.getName() + ":" + this.status;
     }
 
-    public String getService() {
+    public String getName() {
         return service.getName();
     }
     
-    public Integer getStatus() {
+    public EStatus getStatus() {
         return status;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }    
+    
     
 }

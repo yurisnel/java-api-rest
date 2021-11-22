@@ -1,6 +1,11 @@
 package bz.nimitz.ybr.demo.model;
 
-import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -15,18 +20,14 @@ public class State {
     private String name;
 
     @OneToMany(mappedBy = "state")
+    @OrderBy("createdAt DESC")
     Set<History> history;
 
-    @Column
-    @ElementCollection(targetClass=Integer.class)
-    Set<History> serviceStatus;
-
-    public State() {       
+    public State() {
     }
 
     public State(String name) {
         this.name = name;
-        this.filterHistory(new Timestamp(System.currentTimeMillis()));
     }
 
     public Long getId() {
@@ -37,41 +38,40 @@ public class State {
         return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public List<History> getService() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return this.getService(currentTime);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    /* Estados vigentes almacenados en la fecha dada */
 
-    public Set<History> getService() {
-        return serviceStatus;
-    }
+    public List<History> getService(LocalDateTime date) {
 
-    public void filterHistory(Timestamp date) {
-       
-        Timestamp previousDate = this.previousDate(date);
+        LocalDateTime previousDate = this.previousUpdateDate(date);
+
+        List<History> serviceStatus = new ArrayList<>();
 
         serviceStatus.clear();
         for (History h : history) {
-            int seconds = (int) (h.getCreatedAt().getTime() - previousDate.getTime()) / 1000;
+            Duration duration = Duration.between(previousDate, h.getCreatedAt());
+            long seconds = duration.toSeconds();
             if (seconds < 60) {
                 serviceStatus.add(h);
             }
         }
+        return serviceStatus;
     }
-    
-    public Timestamp previousDate(Timestamp date) {
-        Long temp = (long) 0;        
-        Long param = date.getTime();
+
+    public LocalDateTime previousUpdateDate(LocalDateTime date) {
+        LocalDateTime temp = null;
         for (History it : history) {
-            temp = it.getCreatedAt().getTime();
-            if (temp <= param) {
-              return it.getCreatedAt();
+            temp = it.getCreatedAt();
+            if (!temp.isAfter(date)) {
+                return temp;
             }
         }
-        return date;
+
+        throw new RuntimeException("No update previous this date");
     }
 
 }

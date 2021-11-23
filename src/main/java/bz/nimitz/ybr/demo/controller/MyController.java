@@ -1,7 +1,7 @@
 package bz.nimitz.ybr.demo.controller;
 
 import bz.nimitz.ybr.demo.model.StateResponse;
-import bz.nimitz.ybr.demo.service.ServService;
+import bz.nimitz.ybr.demo.service.MyService;
 import bz.nimitz.ybr.demo.IStatusCount;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/services")
-public class ServController {
+public class MyController {
 
     @Autowired
-    ServService servService;
+    MyService myService;
 
-    @GetMapping("load")
-    public void load() {
-        servService.loadData();
-    }
+    /*
+     * @GetMapping("load") public void load() { myService.loadDataFromWeb(); }
+     */
 
     /**
      * 3- Devolver por rest el estado actual de los servicios por estado(provincia).
@@ -32,7 +31,7 @@ public class ServController {
      */
     @GetMapping("status")
     public ResponseEntity<?> statusCurrent() {
-        return new ResponseEntity<List<StateResponse>>(servService.getStatusCurrent(), HttpStatus.OK);
+        return new ResponseEntity<List<StateResponse>>(myService.getStatusCurrent(), HttpStatus.OK);
     }
 
     /**
@@ -43,47 +42,30 @@ public class ServController {
      */
     @GetMapping("status/{state}")
     public ResponseEntity<?> statusCurrentOfState(@PathVariable String state) {
-        return new ResponseEntity<StateResponse>(servService.getStatusCurrent(state), HttpStatus.OK);
+        return new ResponseEntity<StateResponse>(myService.getStatusCurrent(state), HttpStatus.OK);
     }
 
     /**
      * 5- Devolver por rest el estado de los servicios por estado(provincia) filtrando por fecha
+     * 
      * @param dateTime
      * @return
      */
     @GetMapping("status/date/{dateTime}")
     public ResponseEntity<?> statusFromDate(
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime dateTime) {
-        return new ResponseEntity<List<StateResponse>>(servService.getStatusByDate(dateTime), HttpStatus.OK);
+        return new ResponseEntity<List<StateResponse>>(myService.getStatusByDate(dateTime), HttpStatus.OK);
     }
 
     /**
      * 6- Retorno por rest qué estado(provincia) tuvo más indisponibilidad de servicio.
+     * 
      * @return
      */
     @GetMapping("status/unavailability")
     public ResponseEntity<?> statusFromDate() {
-        return new ResponseEntity<IStatusCount>(servService.getStatusMoreDisabled(), HttpStatus.OK);
+        return new ResponseEntity<IStatusCount>(myService.getStatusMoreDisabled(), HttpStatus.OK);
     }
+    
 
-    /*
-     * @GetMapping("/{id}") public ResponseEntity<?> get(@PathVariable Long id) {
-     * 
-     * Serv serv = servService.getService(id); return new ResponseEntity<Serv>(serv,
-     * HttpStatus.OK); }
-     * 
-     * @PostMapping("") ResponseEntity<?> add(@RequestBody Serv newServ) { Serv serv
-     * = servService.saveService(newServ); return new ResponseEntity<Serv>(serv,
-     * HttpStatus.OK); }
-     * 
-     * @PutMapping("/{id}") public ResponseEntity<?> update(@RequestBody Serv
-     * serv, @PathVariable Long id) { Serv existServ = servService.getService(id);
-     * existServ.setName(serv.getName()); servService.saveService(serv); return new
-     * ResponseEntity<>(HttpStatus.OK);
-     * 
-     * }
-     * 
-     * @DeleteMapping("/{id}") boolean delete(@PathVariable Long id) { return
-     * servService.deleteService(id); }
-     */
 }

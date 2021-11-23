@@ -1,7 +1,5 @@
 package bz.nimitz.ybr.demo.model;
 
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.domain.Specification;

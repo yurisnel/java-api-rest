@@ -21,15 +21,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
-public class ServService {
+public class MyService {
 
     @Autowired
     private ServRepository servRepository;
@@ -40,7 +38,7 @@ public class ServService {
     @Autowired
     private HistoryRepository historyRepository;
 
-    @Value("${spring.app.urldata}")
+    @Value("${app.urldata}")
     private String urldata;
 
     public List<History> getStatusCurrentTest() {
@@ -87,8 +85,9 @@ public class ServService {
         }
 
     }
-
-    public void loadData() {
+    
+    
+    public void loadDataFromWeb() {
         Document doc;
         try {
             doc = Jsoup.connect(this.urldata).get();
@@ -150,21 +149,5 @@ public class ServService {
             e.printStackTrace();
         }
     }
-
-    public List<Serv> getAllService() {
-        return servRepository.findAll();
-    }
-
-    /*
-     * public Serv saveService(Serv service) { return servRepository.save(service);
-     * }
-     * 
-     * public Serv getService(Long id) { return
-     * servRepository.findById(id).orElseThrow(() -> new
-     * ObjectNotFoundException(id)); }
-     * 
-     * public boolean deleteService(Long id) { servRepository.deleteById(id); return
-     * true; }
-     */
 
 }

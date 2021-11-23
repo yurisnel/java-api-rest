@@ -1,9 +1,7 @@
 package bz.nimitz.ybr.demo.model;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +69,7 @@ public class State {
             }
         }
 
-        throw new RuntimeException("No update previous this date");
+        throw new RuntimeException("No load data previous this date");
     }
 
 }

@@ -62,7 +62,7 @@ public class MyController {
      * 
      * @return
      */
-    @GetMapping("status/unavailability")
+    @GetMapping("most_unavailable")
     public ResponseEntity<?> statusFromDate() {
         return new ResponseEntity<IStatusCount>(myService.getStatusMoreDisabled(), HttpStatus.OK);
     }

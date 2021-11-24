@@ -1,5 +1,6 @@
 package bz.nimitz.ybr.demo.model;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,16 +61,16 @@ public class State {
         return serviceStatus;
     }
 
-    public LocalDateTime previousUpdateDate(LocalDateTime date) {
+    public LocalDateTime previousUpdateDate(LocalDateTime dateTime) {
         LocalDateTime temp = null;
         for (History it : history) {
             temp = it.getCreatedAt();
-            if (!temp.isAfter(date)) {
+            if (!temp.isAfter(dateTime)) {
                 return temp;
             }
         }
-
-        throw new RuntimeException("No load data previous this date");
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        throw new RuntimeException("No existe registro previo a la fecha solicitada");
     }
 
 }

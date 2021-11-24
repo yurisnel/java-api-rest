@@ -4,16 +4,22 @@ import java.util.List;
 
 public class StateResponse{
 
-    String state;
+    Long id;    
+    String name;
     List<History> services;
    
-    public StateResponse(String state, List<History> services) {
-        this.state = state;
+    public StateResponse(Long id, String name, List<History> services) {
+        this.id = id;
+        this.name = name;
         this.services = services;
     }
+ 
+    public Long getId() {
+        return id;
+    }
 
-    public String getState() {
-        return state;
+    public String getName() {
+        return name;
     }   
 
     public List<History> getServices() {

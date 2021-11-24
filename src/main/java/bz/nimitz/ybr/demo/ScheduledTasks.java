@@ -34,7 +34,7 @@ public class ScheduledTasks {
     @Async
 	public void reportCurrentTime() {
         myService.loadDataFromWeb();
-		logger.info("The time is now {}", dateFormat.format(new Date()));
+		logger.info("Load data at: {}", dateFormat.format(new Date()));
 	}
 
 }

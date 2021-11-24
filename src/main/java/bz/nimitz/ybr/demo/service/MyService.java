@@ -51,7 +51,7 @@ public class MyService {
         LocalDateTime lastUpdateDate = historyRepository.findFirstByOrderByCreatedAtDesc().getCreatedAt();
         for (State state : findAllIterable) {
             List<History> services = historyRepository.findByStateAndCreatedAt(state, lastUpdateDate);
-            result.add(new StateResponse(state.getName(), services));
+            result.add(new StateResponse(state.getId(), state.getName(), services));
         }
         return result;
     }
@@ -60,7 +60,7 @@ public class MyService {
         State state = stateRepository.findFirstByName(stateName);
         LocalDateTime lastUpdateDate = historyRepository.findFirstByOrderByCreatedAtDesc().getCreatedAt();
         List<History> services = historyRepository.findByStateAndCreatedAt(state, lastUpdateDate);
-        return new StateResponse(state.getName(), services);
+        return new StateResponse(state.getId(), state.getName(), services);
     }
 
     public List<StateResponse> getStatusByDate(LocalDateTime dateTime) {
@@ -71,7 +71,7 @@ public class MyService {
             previousDate = state.previousUpdateDate(dateTime);
             List<History> services = historyRepository
                     .findAll(HistorySpecs.isEqualState(state).and(HistorySpecs.isEqualCreatedAtHistory(previousDate)));
-            result.add(new StateResponse(state.getName(), services));
+            result.add(new StateResponse(state.getId(), state.getName(), services));
         }
         return result;
     }
@@ -129,8 +129,7 @@ public class MyService {
                         if (src.contains("verde")) {
                             availability = EStatus.ACTIVE;
                         } else if (src.contains("amarillo")) {
-                            availability = EStatus.PENDING;
-                            ;
+                            availability = EStatus.PENDING;                            
                         } else if (src.contains("rojo")) {
                             availability = EStatus.INACTIVE;
                             ;

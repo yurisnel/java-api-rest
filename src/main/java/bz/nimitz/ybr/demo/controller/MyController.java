@@ -1,9 +1,9 @@
 package bz.nimitz.ybr.demo.controller;
 
-import bz.nimitz.ybr.demo.model.StateResponse;
+import bz.nimitz.ybr.demo.Utils.IStatusCount;
+import bz.nimitz.ybr.demo.model.StateView;
 import bz.nimitz.ybr.demo.service.MyService;
-import bz.nimitz.ybr.demo.IStatusCount;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -14,24 +14,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/services")
+@RequestMapping("/v1/api")
+@Tag(name = "Status services", description = "API para la gestión de la disponibilidad de servicios por estado (provincia)")
+
 public class MyController {
 
     @Autowired
     MyService myService;
-
-    /*
-     * @GetMapping("load") public void load() { myService.loadDataFromWeb(); }
-     */
+  
 
     /**
      * 3- Devolver por rest el estado actual de los servicios por estado(provincia).
      * 
      * @return
      */
-    @GetMapping("status")
+    @GetMapping("/services/status")
     public ResponseEntity<?> statusCurrent() {
-        return new ResponseEntity<List<StateResponse>>(myService.getStatusCurrent(), HttpStatus.OK);
+        return new ResponseEntity<List<StateView>>(myService.getStatusCurrent(), HttpStatus.OK);
     }
 
     /**
@@ -40,9 +39,9 @@ public class MyController {
      * @param state
      * @return
      */
-    @GetMapping("status/{state}")
+    @GetMapping("/services/status/{state}")
     public ResponseEntity<?> statusCurrentOfState(@PathVariable String state) {
-        return new ResponseEntity<StateResponse>(myService.getStatusCurrent(state), HttpStatus.OK);
+        return new ResponseEntity<StateView>(myService.getStatusCurrent(state), HttpStatus.OK);
     }
 
     /**
@@ -51,10 +50,10 @@ public class MyController {
      * @param dateTime
      * @return
      */
-    @GetMapping("status/date/{dateTime}")
+    @GetMapping("/services/status/date/{dateTime}")
     public ResponseEntity<?> statusFromDate(
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime dateTime) {
-        return new ResponseEntity<List<StateResponse>>(myService.getStatusByDate(dateTime), HttpStatus.OK);
+        return new ResponseEntity<List<StateView>>(myService.getStatusByDate(dateTime), HttpStatus.OK);
     }
 
     /**
@@ -62,7 +61,7 @@ public class MyController {
      * 
      * @return
      */
-    @GetMapping("most_unavailable")
+    @GetMapping("/services/most_unavailable")
     public ResponseEntity<?> statusFromDate() {
         return new ResponseEntity<IStatusCount>(myService.getStatusMoreDisabled(), HttpStatus.OK);
     }

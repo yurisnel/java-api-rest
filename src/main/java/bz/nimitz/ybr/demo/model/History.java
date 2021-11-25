@@ -1,10 +1,9 @@
 package bz.nimitz.ybr.demo.model;
 
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import bz.nimitz.ybr.demo.Utils.EStatus;
 
 
 @Entity

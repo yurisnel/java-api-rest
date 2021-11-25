@@ -1,11 +1,13 @@
-package bz.nimitz.ybr.demo.model;
+package bz.nimitz.ybr.demo.Utils;
 
 import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.domain.Specification;
 
-public class HistorySpecs {
+import bz.nimitz.ybr.demo.model.History;
+import bz.nimitz.ybr.demo.model.State;
 
+public class HistorySpecs {
     
     public static Specification<History> isEqualState(State state) {
         return (root, query, builder) -> {

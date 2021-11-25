@@ -1,12 +1,11 @@
 package bz.nimitz.ybr.demo.model;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+import org.webjars.NotFoundException;
 import javax.persistence.*;
 
 @Entity
@@ -70,7 +69,7 @@ public class State {
             }
         }
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        throw new RuntimeException("No existe registro previo a la fecha solicitada");
+        throw new NotFoundException("No existe registro previo a la fecha solicitada");
     }
 
 }

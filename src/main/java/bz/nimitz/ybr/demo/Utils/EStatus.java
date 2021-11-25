@@ -1,4 +1,4 @@
-package bz.nimitz.ybr.demo.model;
+package bz.nimitz.ybr.demo.Utils;
 
 public enum EStatus {
     PENDING,

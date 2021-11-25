@@ -1,7 +1,6 @@
 package bz.nimitz.ybr.demo.model;
 
 import java.util.Set;
-
 import javax.persistence.*;
 
 @Entity

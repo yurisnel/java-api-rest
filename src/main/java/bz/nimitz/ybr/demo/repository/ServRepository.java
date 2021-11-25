@@ -1,6 +1,6 @@
 package bz.nimitz.ybr.demo.repository;
 
-import bz.nimitz.ybr.demo.IStatusCount;
+import bz.nimitz.ybr.demo.Utils.IStatusCount;
 import bz.nimitz.ybr.demo.model.Serv;
 
 import java.util.List;

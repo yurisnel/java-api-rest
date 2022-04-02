@@ -11,9 +11,9 @@ Ap rest desarrollada para fines demostrativos y prácticos con Spring Boot Frame
 
 - Obtener disponibilidad de todos los servicios por provincia
 
-- Obtener disponibilidad actual de servivios de una provincia
+- Obtener disponibilidad actual de servicios de una provincia indicada
 
-- Obtener disponibilidad de servicios por provincia dada una fecha
+- Obtener disponibilidad de servicios por provincia de una fecha indicada
 
 - Obtener Provincia que tuvo mas afectaciones de servicios
 
@@ -27,7 +27,7 @@ Ap rest desarrollada para fines demostrativos y prácticos con Spring Boot Frame
 
 - Se crean modelos con relaciones: [Provincia](src/main/java/bz/nimitz/ybr/demo/model/State.java), [Servicio](src/main/java/bz/nimitz/ybr/demo/model/Serv.java), e [Historial](src/main/java/bz/nimitz/ybr/demo/model/History.java), para gestionar la disponibilidad de los estados por provincias y fechas.
 
-- Se crean repositorios JPA (Java Persistence API) para el acceso a los datos [Provincias](src/main/java/bz/nimitz/ybr/demo/repository/StateRepository.java),[Servicios](src/main/java/bz/nimitz/ybr/demo/repository/ServRepository.java), e [Historial](src/main/java/bz/nimitz/ybr/demo/repository/HistoryRepository.java)
+- Se crean repositorios JPA (Java Persistence API) para el acceso a los datos [Provincias](src/main/java/bz/nimitz/ybr/demo/repository/StateRepository.java), [Servicios](src/main/java/bz/nimitz/ybr/demo/repository/ServRepository.java), e [Historial](src/main/java/bz/nimitz/ybr/demo/repository/HistoryRepository.java)
 
 - Para cargar y leer html de una web externa se utiliza la libreria p [jsoup](https://jsoup.org/) en un [Servicio::loadDataFromWeb](src/main/java/bz/nimitz/ybr/demo/service/MyService.java) que se ejecuta cada N segundos [ScheduledTasks](src/main/java/bz/nimitz/ybr/demo/ScheduledTasks.java)
 

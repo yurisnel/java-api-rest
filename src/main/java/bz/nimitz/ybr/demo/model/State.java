@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.webjars.NotFoundException;
+
+import bz.nimitz.ybr.demo.Utils.RecordNotFoundException;
+
 import javax.persistence.*;
 
 @Entity
@@ -69,7 +71,7 @@ public class State {
             }
         }
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        throw new NotFoundException("No existe registro previo a la fecha solicitada");
+        throw new RecordNotFoundException("No existe registro previo a la fecha solicitada");
     }
 
 }

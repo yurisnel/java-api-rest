@@ -3,6 +3,7 @@ package bz.nimitz.ybr.demo.service;
 import bz.nimitz.ybr.demo.Utils.EStatus;
 import bz.nimitz.ybr.demo.Utils.HistorySpecs;
 import bz.nimitz.ybr.demo.Utils.IStatusCount;
+import bz.nimitz.ybr.demo.Utils.RecordNotFoundException;
 import bz.nimitz.ybr.demo.model.History;
 import bz.nimitz.ybr.demo.model.Serv;
 import bz.nimitz.ybr.demo.model.State;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -60,7 +60,7 @@ public class MyService {
     public StateView getStatusCurrent(String stateName) {
         State state = stateRepository.findFirstByName(stateName);
         if (state == null) {
-            throw new NotFoundException("Estado no existente");
+            throw new RecordNotFoundException("Estado no existente");
         }
         LocalDateTime lastUpdateDate = historyRepository.findFirstByOrderByCreatedAtDesc().getCreatedAt();
         List<History> services = historyRepository.findByStateAndCreatedAt(state, lastUpdateDate);
@@ -85,7 +85,7 @@ public class MyService {
         if (!result.isEmpty()) {
             return result.get(0);
         } else {
-            throw new NotFoundException("No result data");
+            throw new RecordNotFoundException("No result data");
         }
 
     }
